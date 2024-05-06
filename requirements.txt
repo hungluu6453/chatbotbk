@@ -9,3 +9,4 @@ langchain_openai
 rank_bm25
 langchain_experimental
 langchain-cohere
+pysqlite3-binary
