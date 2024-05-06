@@ -1,0 +1,11 @@
+chromadb==0.4.15
+langchain
+sentence_transformers
+streamlit
+openai
+flashtext
+tiktoken
+langchain_openai
+rank_bm25
+langchain_experimental
+langchain-cohere

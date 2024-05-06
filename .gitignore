@@ -1,0 +1,6 @@
+ssh
+ssh.pub
+.gitattributes
+logo.jpg:Zone.Identifier
+test.py
+__pycache__
