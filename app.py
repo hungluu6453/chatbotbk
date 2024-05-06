@@ -1,5 +1,5 @@
 import streamlit as st
-from rag import rag
+from rag import rag_
 
 # Tạo ra một dictionary lưu trữ mapping giữa câu hỏi và giá trị tương ứng của nút
 guiding_questions = {
@@ -55,7 +55,7 @@ def handle_user_input(user_prompt):
     if st.session_state.messages[-1]["role"] != "assistant":
         with st.chat_message("assistant"):
             with st.spinner("Loading..."):
-                ai_response = rag(user_prompt)
+                ai_response = rag_(user_prompt)
                 if ai_response == "Encountered some errors. Please recheck your request!":
                     st.write("Xin lỗi, tôi không có thông tin về câu hỏi này!")
                 else:

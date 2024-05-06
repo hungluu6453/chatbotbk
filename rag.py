@@ -177,7 +177,7 @@ rag_chain = [rag_chain_with_source1, rag_chain_with_source2, rag_chain_with_sour
 
 ###################################################################################
 
-def rag(question: str) -> str:
+def rag_(question: str) -> str:
 
     keywords_found = keyword_processor.extract_keywords(question)
     if 'thạc sĩ' in keywords_found or 'học viên' in keywords_found:
