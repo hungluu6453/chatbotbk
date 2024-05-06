@@ -48,7 +48,7 @@ def process_data(data: List[str], child_text_splitter, embedding, vectorstore_na
         vectorstore=vectorstore,
         docstore=store,
         id_key=id_key,
-        search_kwargs={"k": 25}
+        search_kwargs={"k": 10}
     )
 
     doc_ids = [str(uuid.uuid4()) for _ in data]

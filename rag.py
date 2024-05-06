@@ -192,13 +192,13 @@ generate_queries = (
 from langchain.retrievers import BM25Retriever, EnsembleRetriever
 
 # initialize the bm25 retriever and chroma retriever
-bm25_retriever1 = BM25Retriever.from_documents(data, k=25)
+bm25_retriever1 = BM25Retriever.from_documents(data, k=10)
 ensemble_retriever1 = EnsembleRetriever(retrievers=[bm25_retriever1, retriever1], weights=[0.5, 0.5])
 
-bm25_retriever2 = BM25Retriever.from_documents(data2, k=25)
+bm25_retriever2 = BM25Retriever.from_documents(data2, k=10)
 ensemble_retriever2 = EnsembleRetriever(retrievers=[bm25_retriever2, retriever2], weights=[0.5, 0.5])
 
-bm25_retriever3 = BM25Retriever.from_documents(data3, k=25)
+bm25_retriever3 = BM25Retriever.from_documents(data3, k=10)
 ensemble_retriever3 = EnsembleRetriever(retrievers=[bm25_retriever3, retriever3], weights=[0.5, 0.5])
 
 #########################################################################################
