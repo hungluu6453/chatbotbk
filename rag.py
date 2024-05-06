@@ -31,6 +31,68 @@ vectorstore3, retriever3 = process_data(data3, child_text_splitter, embedding, "
 
 ##############################################################################
 
+from flashtext import KeywordProcessor
+keyword_processor = KeywordProcessor()
+# keyword_processor.add_keyword(<unclean name>, <standardised name>)
+keyword_processor.add_keyword('thạc sĩ')
+keyword_processor.add_keyword('học viên')
+keyword_processor.add_keyword('nghiên cứu sinh')
+keyword_processor.add_keyword('tiến sĩ')
+
+################################################################################
+
+import pandas as pd
+
+faq = "raw_data/faq.xlsx"
+df = pd.read_excel(faq)
+questions = df["question"].tolist()
+answers = df["answer"].tolist()
+
+faq_thsi_q = []
+faq_thsi_a = []
+faq_tsi_q = []
+faq_tsi_a = []
+
+for i in range(len(questions)):
+  keywords_found = keyword_processor.extract_keywords(questions[i])
+  if 'thạc sĩ' in keywords_found or 'học viên' in keywords_found:
+    faq_thsi_q.append(questions[i])
+    faq_thsi_a.append(answers[i])
+
+  elif 'nghiên cứu sinh' in keywords_found or 'tiến sĩ' in keywords_found:
+    faq_tsi_q.append(questions[i])
+    faq_tsi_a.append(answers[i])
+
+import uuid
+from langchain_core.documents import Document
+
+def add_faq(retriever, vectorstore, questions, answers):
+    id_key = "doc_id"
+
+    doc_ids = [str(uuid.uuid4()) for _ in answers]
+
+    question_ = [
+        Document(page_content=s, metadata={id_key: doc_ids[i]})
+        for i, s in enumerate(questions)
+    ]
+
+    answers_ = [ Document(page_content=s) for s in answers]
+
+    retriever.vectorstore.add_documents(question_)
+
+    retriever.docstore.mset(list(zip(doc_ids, answers_)))
+
+# Add FAQ to vectorstore
+
+add_faq(retriever2, vectorstore2, faq_thsi_q, faq_thsi_a)
+
+add_faq(retriever3, vectorstore3, faq_tsi_q, faq_tsi_a)
+
+add_faq(retriever1, vectorstore1, questions, answers)
+
+
+##################################################################################
+
 ANYSCALE_API_BASE = "credential-1711634141163"
 ANYSCALE_API_KEY = "esecret_chitz7splr5ut6vfvqpn72itd3"
 ANYSCALE_MODEL_NAME = "meta-llama/Meta-Llama-3-8B-Instruct"
