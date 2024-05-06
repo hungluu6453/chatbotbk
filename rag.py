@@ -2,6 +2,10 @@ from langchain.embeddings import HuggingFaceEmbeddings
 from langchain.prompts import PromptTemplate
 from utility import load_data, process_data, CustomRetriever, CustomRetriever1
 
+__import__('pysqlite3')
+import sys
+sys.modules['sqlite3'] = sys.modules.pop('pysqlite3')
+
 
 data1 = load_data('raw_data/sv')
 data2 = load_data('raw_data/thacsi')
