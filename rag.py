@@ -203,9 +203,9 @@ ensemble_retriever3 = EnsembleRetriever(retrievers=[bm25_retriever3, retriever3]
 
 #########################################################################################
 
-custom_retriever1 = CustomRetriever(retriever = ensemble_retriever1)
-custom_retriever2 = CustomRetriever(retriever = ensemble_retriever2)
-custom_retriever3 = CustomRetriever(retriever = ensemble_retriever3)
+custom_retriever1 = CustomRetriever1(retriever = ensemble_retriever1)
+custom_retriever2 = CustomRetriever1(retriever = ensemble_retriever2)
+custom_retriever3 = CustomRetriever1(retriever = ensemble_retriever3)
 
 multiq_chain1 = generate_queries | custom_retriever1
 multiq_chain2 = generate_queries | custom_retriever2
@@ -225,13 +225,13 @@ rag_chain_with_source3 = RunnableParallel(
 
 ############################################################################################
 
-from flashtext import KeywordProcessor
-keyword_processor = KeywordProcessor()
-# keyword_processor.add_keyword(<unclean name>, <standardised name>)
-keyword_processor.add_keyword('thạc sĩ')
-keyword_processor.add_keyword('học viên')
-keyword_processor.add_keyword('nghiên cứu sinh')
-keyword_processor.add_keyword('tiến sĩ')
+# from flashtext import KeywordProcessor
+# keyword_processor = KeywordProcessor()
+# # keyword_processor.add_keyword(<unclean name>, <standardised name>)
+# keyword_processor.add_keyword('thạc sĩ')
+# keyword_processor.add_keyword('học viên')
+# keyword_processor.add_keyword('nghiên cứu sinh')
+# keyword_processor.add_keyword('tiến sĩ')
 
 ################################################################################
 
