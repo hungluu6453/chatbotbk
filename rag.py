@@ -204,9 +204,9 @@ ensemble_retriever3 = EnsembleRetriever(retrievers=[bm25_retriever3, retriever3]
 
 #########################################################################################
 
-custom_retriever1 = CustomRetriever(retriever = ensemble_retriever1)
-custom_retriever2 = CustomRetriever(retriever = ensemble_retriever2)
-custom_retriever3 = CustomRetriever(retriever = ensemble_retriever3)
+custom_retriever1 = CustomRetriever1(retriever = ensemble_retriever1)
+custom_retriever2 = CustomRetriever1(retriever = ensemble_retriever2)
+custom_retriever3 = CustomRetriever1(retriever = ensemble_retriever3)
 
 multiq_chain1 = generate_queries | custom_retriever1
 multiq_chain2 = generate_queries | custom_retriever2
@@ -250,8 +250,8 @@ def rag_(question: str) -> str:
     else:
       response = rag_chain[0].invoke(question)
     
-    # return response['answer']
-    return response
+    return response['answer']
+    # return response
 
 ###################################################################################
 
