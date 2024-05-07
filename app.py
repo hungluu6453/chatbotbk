@@ -43,7 +43,7 @@ def main():
         if st.sidebar.button(question, key=question):
             user_prompt = question
             guiding_questions[question] = True  # Đánh dấu câu hỏi được chọn
-    handle_user_input(user_prompt)
+    handle_user_input1(user_prompt)
 
 def handle_user_input(user_prompt):
     if user_prompt is not None:
@@ -66,9 +66,6 @@ def handle_user_input(user_prompt):
 
 
 def handle_user_input1(user_prompt):
-    # Clear all messages except the latest user and assistant messages
-    st.session_state.messages = [msg for msg in st.session_state.messages if msg["role"] in ["user", "assistant"]]
-
     if user_prompt is not None:
         st.session_state.messages.append({"role": "user", "content": user_prompt})
         with st.chat_message("user"):
@@ -76,24 +73,30 @@ def handle_user_input1(user_prompt):
 
     # process user input
     if st.session_state.messages[-1]["role"] != "assistant":
-        with st.spinner("Loading..."):
-            ai_response = rag_(user_prompt)
-            if ai_response == "Encountered some errors. Please recheck your request!":
-                st.session_state.messages.append({"role": "assistant", "content": "Xin lỗi, tôi không có thông tin về câu hỏi này!"})
-            else:
+        handled = False  # Biến để đánh dấu xem thông điệp hiện tại đã được xử lý chưa
+        for message in reversed(st.session_state.messages):
+            if message["role"] == "assistant":
+                handled = True
+                break
+            if message["role"] == "user":
+                with st.chat_message("assistant"):
+                    with st.spinner("Loading..."):
+                        ai_response = rag_(message["content"])
+                        if ai_response == "Encountered some errors. Please recheck your request!":
+                            st.write("Xin lỗi, tôi không có thông tin về câu hỏi này!")
+                        else:
+                            st.write(ai_response)
                 st.session_state.messages.append({"role": "assistant", "content": ai_response})
-
-    # Display only the latest user and assistant messages
-    latest_user_message = next((msg for msg in reversed(st.session_state.messages) if msg["role"] == "user"), None)
-    latest_assistant_message = next((msg for msg in reversed(st.session_state.messages) if msg["role"] == "assistant"), None)
-    
-    if latest_user_message:
-        with st.chat_message("user"):
-            st.write(latest_user_message["content"])
-
-    if latest_assistant_message:
-        with st.chat_message("assistant"):
-            st.write(latest_assistant_message["content"])
+                break  # Sau khi xử lý tin nhắn của người dùng, thoát khỏi vòng lặp
+        if not handled:  # Nếu tin nhắn hiện tại chưa được xử lý, xử lý nó
+            with st.chat_message("assistant"):
+                with st.spinner("Loading..."):
+                    ai_response = rag_(user_prompt)
+                    if ai_response == "Encountered some errors. Please recheck your request!":
+                        st.write("Xin lỗi, tôi không có thông tin về câu hỏi này!")
+                    else:
+                        st.write(ai_response)
+            st.session_state.messages.append({"role": "assistant", "content": ai_response})
 
 
 
