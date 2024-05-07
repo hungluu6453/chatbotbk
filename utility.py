@@ -20,9 +20,10 @@ def load_data(data_path):
     folders = os.listdir(data_path)
     dir_loaders = []
     loaded_documents = []
+    text_loader_kwargs={'autodetect_encoding': True}
 
     for folder in folders:
-        dir_loader = DirectoryLoader(os.path.join(data_path, folder), loader_cls=TextLoader)
+        dir_loader = DirectoryLoader(os.path.join(data_path, folder), loader_cls=TextLoader, loader_kwargs=text_loader_kwargs)
         dir_loaders.append(dir_loader)
 
     for dir_loader in dir_loaders:

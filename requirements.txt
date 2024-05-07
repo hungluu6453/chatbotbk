@@ -7,7 +7,9 @@ flashtext==2.7
 tiktoken==0.6.0
 langchain-openai==0.1.6
 rank_bm25==0.2.2
-langchain_experimental==0.0.57
-langchain-cohere==0.1.4
-pysqlite3-binary==0.5.2.post3
+# langchain_experimental==0.0.57
+# langchain-cohere==0.1.4
+# pysqlite3-binary==0.5.2.post3
 openpyxl==3.1.2
+
+chardet
