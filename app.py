@@ -31,19 +31,25 @@ def main():
             {"role": "assistant", "content": "Xin chào, tôi có thể giúp gì cho bạn"}
         ]
 
+    if "current_question_processed" not in st.session_state.keys():
+        st.session_state.current_question_processed = True
+
     if "messages" in st.session_state.keys():
         # display messages
         for message in st.session_state.messages:
-            with st.chat_message(message["role"]):
-                st.write(message["content"])
+            if message["role"] != "user":
+                with st.chat_message(message["role"]):
+                    st.write(message["content"])
 
     # get user input
     user_prompt = st.chat_input()
-    for question in guiding_questions.keys():
-        if st.sidebar.button(question, key=question):
-            user_prompt = question
-            guiding_questions[question] = True  # Đánh dấu câu hỏi được chọn
-    handle_user_input1(user_prompt)
+    if user_prompt:
+        st.session_state.current_question_processed = False
+        for question in guiding_questions.keys():
+            if st.sidebar.button(question, key=question):
+                user_prompt = question
+                guiding_questions[question] = True  # Đánh dấu câu hỏi được chọn
+        handle_user_input(user_prompt)
 
 def handle_user_input(user_prompt):
     if user_prompt is not None:
@@ -52,7 +58,7 @@ def handle_user_input(user_prompt):
             st.write(user_prompt)
 
     # process user input
-    if st.session_state.messages[-1]["role"] != "assistant":
+    if st.session_state.messages[-1]["role"] != "assistant" and not st.session_state.current_question_processed:
         with st.chat_message("assistant"):
             with st.spinner("Loading..."):
                 ai_response = rag_(user_prompt)
@@ -63,39 +69,7 @@ def handle_user_input(user_prompt):
 
         new_ai_message = {"role": "assistant", "content": ai_response}
         st.session_state.messages.append(new_ai_message)
-
-
-def handle_user_input1(user_prompt):
-    # Clear all messages except the latest user and assistant messages
-    st.session_state.messages = [msg for msg in st.session_state.messages if msg["role"] in ["user", "assistant"]]
-
-    if user_prompt is not None:
-        st.session_state.messages.append({"role": "user", "content": user_prompt})
-        with st.chat_message("user"):
-            st.write(user_prompt)
-
-    # process user input
-    if st.session_state.messages[-1]["role"] != "assistant":
-        with st.spinner("Loading..."):
-            ai_response = rag_(user_prompt)
-            if ai_response == "Encountered some errors. Please recheck your request!":
-                st.session_state.messages.append({"role": "assistant", "content": "Xin lỗi, tôi không có thông tin về câu hỏi này!"})
-            else:
-                st.session_state.messages.append({"role": "assistant", "content": ai_response})
-
-    # Display only the latest user and assistant messages
-    latest_user_message = next((msg for msg in reversed(st.session_state.messages) if msg["role"] == "user"), None)
-    latest_assistant_message = next((msg for msg in reversed(st.session_state.messages) if msg["role"] == "assistant"), None)
-    
-    if latest_user_message:
-        with st.chat_message("user"):
-            st.write(latest_user_message["content"])
-
-    if latest_assistant_message:
-        with st.chat_message("assistant"):
-            st.write(latest_assistant_message["content"])
-
-
+        st.session_state.current_question_processed = True
 
 if __name__ == '__main__':
     main()
