@@ -204,7 +204,7 @@ class CustomRetriever1(BaseRetriever):
           docs_content.append(unique_documents[i].page_content)
 
         co = cohere.Client(COHERE_API_KEY)
-        results = co.rerank(query=queries[0], documents=docs_content, top_n=10, model='rerank-multilingual-v3.0', return_documents=True)
+        results = co.rerank(query=queries[0], documents=docs_content, top_n=5, model='rerank-multilingual-v3.0', return_documents=True)
 
         reranked_indices = [result.index for result in results.results]
 
