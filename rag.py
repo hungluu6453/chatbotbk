@@ -138,12 +138,11 @@ def format_docs(docs):
 # Build prompt
 from langchain.prompts import PromptTemplate
 template ="""
-Trả lời câu hỏi dựa trên những quy định được cung cấp.
-Không ghi chú và trích dẫn nguồn thông tin đã tham khảo trong câu trả lời.
+Trả lời câu hỏi dựa trên văn bản được cung cấp.
 Câu trả lời nên bắt đầu bằng: "Theo quy định của Trường ĐH Bách Khoa Tp.HCM, ..."
-Nếu trong quy văn bản không có thông tin cho câu trả lời, vui lòng thông báo: "Xin lỗi, tôi không có thông tin cho câu hỏi này!"
+Nếu trong văn bản không có thông tin cho câu trả lời, vui lòng trả lời: "Xin lỗi, tôi không có thông tin cho câu hỏi này!"
 
-Quy định: {context}
+Văn bản: {context}
 
 Câu hỏi: {question}
 
