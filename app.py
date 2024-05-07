@@ -71,24 +71,9 @@ def handle_user_input1(user_prompt):
         with st.chat_message("user"):
             st.write(user_prompt)
 
-    # process user input
     if st.session_state.messages[-1]["role"] != "assistant":
-        handled = False  # Biến để đánh dấu xem thông điệp hiện tại đã được xử lý chưa
-        for message in reversed(st.session_state.messages):
-            if message["role"] == "assistant":
-                handled = True
-                break
-            if message["role"] == "user":
-                with st.chat_message("assistant"):
-                    with st.spinner("Loading..."):
-                        ai_response = rag_(message["content"])
-                        if ai_response == "Encountered some errors. Please recheck your request!":
-                            st.write("Xin lỗi, tôi không có thông tin về câu hỏi này!")
-                        else:
-                            st.write(ai_response)
-                st.session_state.messages.append({"role": "assistant", "content": ai_response})
-                break  # Sau khi xử lý tin nhắn của người dùng, thoát khỏi vòng lặp
-        if not handled:  # Nếu tin nhắn hiện tại chưa được xử lý, xử lý nó
+        handled = st.session_state.get("handled", False)  # Lấy giá trị của biến handled
+        if not handled:  # Chỉ xử lý nếu handled == False
             with st.chat_message("assistant"):
                 with st.spinner("Loading..."):
                     ai_response = rag_(user_prompt)
@@ -97,7 +82,7 @@ def handle_user_input1(user_prompt):
                     else:
                         st.write(ai_response)
             st.session_state.messages.append({"role": "assistant", "content": ai_response})
-
+            st.session_state.handled = True  # Đánh dấu là đã xử lý câu hỏi
 
 
 if __name__ == '__main__':
