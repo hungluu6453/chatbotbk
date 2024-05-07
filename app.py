@@ -43,9 +43,32 @@ def main():
         if st.sidebar.button(question, key=question):
             user_prompt = question
             guiding_questions[question] = True  # Đánh dấu câu hỏi được chọn
-    handle_user_input(user_prompt)
+    handle_user_input1(user_prompt)
 
 def handle_user_input(user_prompt):
+    if user_prompt is not None:
+        st.session_state.messages.append({"role": "user", "content": user_prompt})
+        with st.chat_message("user"):
+            st.write(user_prompt)
+
+    # process user input
+    if st.session_state.messages[-1]["role"] != "assistant":
+        with st.chat_message("assistant"):
+            with st.spinner("Loading..."):
+                ai_response = rag_(user_prompt)
+                if ai_response == "Encountered some errors. Please recheck your request!":
+                    st.write("Xin lỗi, tôi không có thông tin về câu hỏi này!")
+                else:
+                    st.write(ai_response)
+
+        new_ai_message = {"role": "assistant", "content": ai_response}
+        st.session_state.messages.append(new_ai_message)
+
+
+def handle_user_input1(user_prompt):
+    # Clear all messages except the latest user and assistant messages
+    st.session_state.messages = [msg for msg in st.session_state.messages if msg["role"] in ["user", "assistant"]]
+
     if user_prompt is not None:
         st.session_state.messages.append({"role": "user", "content": user_prompt})
         with st.chat_message("user"):
