@@ -14,8 +14,11 @@ def main():
     st.set_page_config(page_title="Chatbot BK")
 
     st.image(["logo.jpg"], width=100)
+    # with st.columns(3)[1]:
+    #     st.image(["logo.jpg"])
 
     st.title("Chatbot Phòng Đào Tạo")
+    # st.markdown("<h1 style='text-align: center'>Chatbot Phòng Đào Tạo</h1>", unsafe_allow_html=True)
     
     st.subheader("Tôi có thể giải đáp các thắc mắc về quy định học vụ của Trường Đại Học Bách Khoa - ĐHQG TP.HCM", divider='rainbow')
 
@@ -29,11 +32,10 @@ def main():
         ]
 
     if "messages" in st.session_state.keys():
-        # Chỉ hiển thị tin nhắn mới nhất
-        latest_message = st.session_state.messages[-1] if st.session_state.messages else None
-        if latest_message:
-            with st.chat_message(latest_message["role"]):
-                st.write(latest_message["content"])
+        # display messages
+        for message in st.session_state.messages:
+            with st.chat_message(message["role"]):
+                st.write(message["content"])
 
     # get user input
     user_prompt = st.chat_input()
@@ -45,11 +47,12 @@ def main():
 
 def handle_user_input(user_prompt):
     if user_prompt is not None:
-        st.session_state.messages = [{"role": "user", "content": user_prompt}]
+        st.session_state.messages.append({"role": "user", "content": user_prompt})
+        with st.chat_message("user"):
+            st.write(user_prompt)
 
     # process user input
-    latest_message = st.session_state.messages[-1] if st.session_state.messages else None
-    if latest_message and latest_message["role"] != "assistant":
+    if st.session_state.messages[-1]["role"] != "assistant":
         with st.chat_message("assistant"):
             with st.spinner("Loading..."):
                 ai_response = rag_(user_prompt)
@@ -60,6 +63,7 @@ def handle_user_input(user_prompt):
 
         new_ai_message = {"role": "assistant", "content": ai_response}
         st.session_state.messages.append(new_ai_message)
+
 
 if __name__ == '__main__':
     main()
