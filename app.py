@@ -19,10 +19,10 @@ def main():
     # with st.columns(3)[1]:
     #     st.image(["logo.jpg"])
 
-    st.title("CHATBOT HỖ TRỢ HỌC VỤ")
+    st.title("CHATBOT HỌC VỤ HCMUT")
     # st.markdown("<h1 style='text-align: center'>Chatbot Phòng Đào Tạo</h1>", unsafe_allow_html=True)
     
-    st.subheader("Tôi là trợ lý ảo thông minh có khả năng giải đáp các thắc mắc về quy định học vụ của Trường Đại Học Bách Khoa - ĐHQG TP.HCM", divider='rainbow')
+    st.subheader("Tôi là thông minh, sẵn sàng giúp bạn giải đáp các vấn đề học vụ.", divider='rainbow')
 
     # Hiển thị sidebar với các câu hỏi hướng dẫn
     st.sidebar.subheader("Một số câu hỏi mẫu")
